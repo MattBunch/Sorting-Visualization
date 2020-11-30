@@ -12,10 +12,6 @@ This programs visualizes serveral sorting algorithms. As of writing, only Bubble
 
 Core components built, bubblesort implemented.
 
-### 30/11/2020
-
-Pushed to github.
-
 # Extensions for future versions:
 
 - Insertion sort
