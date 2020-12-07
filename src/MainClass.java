@@ -18,6 +18,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * <p>
+ * @author Matt Bunch
+ * @version 1.0
+ * @param sorts an array in multiple methods through javafx GUI.
+ * @since 30-11-2020
+ */
+
+
 public class MainClass extends Application {
 
 	Random rand = new Random();
