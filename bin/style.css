@@ -1,0 +1,59 @@
+.root {
+	-fx-background-image: url("background.jpg");
+}
+
+.button{
+	-fx-text-fill: white;
+	-fx-font-family: "Arial Narrow";
+	-fx-background-color: linear-gradient(#61a2b1, #2A5058);
+	-fx-effect: dropshadow( three-pass-box , rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);	
+	-fx-padding: 10px 20px;
+	-fx-font-size: 18px;
+  	-fx-font-weight: bold;
+  	-fx-pref-width: 160px;
+  	-fx-transition-duration: 400ms;
+}
+
+.button:hover {
+	-fx-background-color: linear-gradient(#2A5058, #61a2b1);
+	-fx-background-radius: 3% 3% 3% 3%;
+}
+
+.label{
+	-fx-text-fill: white;
+	-fx-font-size: 12px;
+	-fx-font-weight: bold;
+	-fx-font-family: "Arial Narrow";
+}
+
+#title-text{
+	-fx-font-size: 32px;
+	-fx-font-family: "Arial Black";
+	-fx-effect: innershadow(three-pass-box, rgba(0, 0, 0, 0.7), 6, 0.0, 0, 2);
+}
+
+#label2-text {
+	-fx-text-fill: white;
+}
+
+.text-area {
+	-fx-text-fill: #00ff00;
+	-fx-font-size: 12px;
+	-fx-font-family: "Consolas";
+	-tx-display-caret:true;
+}
+
+.text-area .content{
+	-fx-background-color: #000000;
+}
+
+.choice-box{
+	-fx-background-color: black;
+	-fx-mark-color: orange;
+}
+
+.choice-box .context-menu { -fx-background-color: black; }
+
+.choice-box > .label{
+	-fx-text-fill: white;
+}

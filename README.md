@@ -5,12 +5,17 @@ This programs visualizes serveral sorting algorithms. As of writing, only Bubble
 ## Built With:
 
 - Java, JavaFX
+- Eclipse
 
 ## Devlog:
 
 ### 25/11/2020
 
 Core components built, bubblesort implemented.
+
+### 5/01/2021
+
+Added key functionality.
 
 # Extensions for future versions:
 
