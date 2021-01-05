@@ -160,8 +160,9 @@ public class MainClass extends Application {
 			} else if (key.getCode() == KeyCode.I) {
 				// TODO: print array in new window pop up
 				System.out.println("'i' key pressed");
+			} else if (key.getCode() == KeyCode.H) {
+				// help window pop up
 			}
-			// help window pop up
 		});
 
 		return output;
