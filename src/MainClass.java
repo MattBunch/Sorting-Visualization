@@ -7,12 +7,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -48,25 +50,38 @@ public class MainClass extends Application {
 
 	Scene menuScene;
 	Scene mainScene;
+	Scene optionsScene;
 
-	VBox layout;
+//	VBox layout;
 	Canvas canvas;
 	GraphicsContext gc;
 
 	Timeline t;
 
 	// title
-	Label titleLabel = new Label("Sorting Visualizer");
+	String title = "Sorting Visualizer";
+	Label titleLabel = new Label(title);
 
-	// buttons
-	Button bubbleSortButton = new Button("bubble sort");
-	Button insertionSortButton = new Button("insertion sort");
-	Button quickSortButton = new Button("quick sort");
-	Button heapSortButton = new Button("heap sort");
-	Button quitButton = new Button("quit");
+	// main menu buttons
+	Button bubbleSortButton = new Button("Bubble sort");
+	Button insertionSortButton = new Button("Insertion sort");
+	Button quickSortButton = new Button("Quick sort");
+	Button heapSortButton = new Button("Heap sort");
+	Button selectionSortButton = new Button("Selection sort");
+	Button optionsButton = new Button("Options");
+	Button quitButton = new Button("Quit");
+
+	// options buttons
+	Button fullScreenButton = new Button("Toggle Full Screen");
+	Button returnButton = new Button("Return");
+
+	boolean fullscreen = false;
+
+	private String style = "style.css";
 
 	int i = 0;
 	int j = 0;
+	int minIndex;
 
 	static int counter = 1;
 
@@ -84,39 +99,75 @@ public class MainClass extends Application {
 		mainArray = initializeArray(WIN_WIDTH);
 		printArray();
 
-		window.setTitle("Sorting visualizer");
+		window.setTitle(title);
 		window.setResizable(false);
 		window.setOnCloseRequest(e -> System.exit(0));
 
 		menuScene = createMenu(window);
 		mainScene = createMainScene(window);
+		optionsScene = createOptionsMenu(window);
 
-		menuScene.getStylesheets().add("style.css");
+		menuScene.getStylesheets().add(style);
+		optionsScene.getStylesheets().add(style);
 		titleLabel.setId("title-text");
 
 		window.setScene(menuScene);
+
+		window.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+
+		window.addEventHandler(KeyEvent.KEY_PRESSED, key -> {
+			if (KeyCode.F11.equals(key.getCode())) {
+				window.setFullScreen(!window.isFullScreen());
+			}
+		});
+
 		window.show();
+	}
+
+	public void swapScenes(Parent newContent) {
+		window.close();
+		window.getScene().setRoot(newContent);
 	}
 
 	private Scene createMenu(Stage stage) {
 
-		layout = new VBox();
+		VBox layout = new VBox();
 		layout.setAlignment(Pos.CENTER);
 		layout.setSpacing(5);
 
-		layout.getChildren().addAll(titleLabel, bubbleSortButton, insertionSortButton, quickSortButton, heapSortButton,
-				quitButton);
+		layout.getChildren().addAll(titleLabel, bubbleSortButton, insertionSortButton, selectionSortButton,
+				quickSortButton, heapSortButton, optionsButton, quitButton);
 
 		bubbleSortButton.setOnAction(e -> {
 			stage.setScene(mainScene);
 			runBubbleSortAnimation(mainArray, canvas, gc);
 		});
-		
+
 		insertionSortButton.setOnAction(e -> {
 			stage.setScene(mainScene);
 			runInsertionSortAnimation(mainArray, canvas, gc);
 		});
+
+		selectionSortButton.setOnAction(e -> {
+			stage.setScene(mainScene);
+			runSelectionSortAnimation(mainArray, canvas, gc);
+		});
 		
+		quickSortButton.setOnAction(e -> {
+//			stage.setScene(mainScene);
+//			runQuickSortAnimation(mainArray, canvas, gc);
+		});
+		
+		heapSortButton.setOnAction(e -> {
+			stage.setScene(mainScene);
+			runHeapSortAnimation(mainArray, canvas, gc);
+		});
+
+		optionsButton.setOnAction(e -> {
+			stage.setScene(optionsScene);
+//			swapScenes(optionsScene.getRoot());
+		});
+
 		quitButton.setOnAction(e -> {
 			stage.close();
 		});
@@ -126,7 +177,7 @@ public class MainClass extends Application {
 
 	private Scene createMainScene(Stage stage) {
 
-		layout = new VBox();
+		VBox layout = new VBox();
 		layout.setAlignment(Pos.CENTER);
 
 		// canvas setup
@@ -160,12 +211,34 @@ public class MainClass extends Application {
 			} else if (key.getCode() == KeyCode.I) {
 				// TODO: print array in new window pop up
 				System.out.println("'i' key pressed");
+				// pauseAnimation();
+				// SortingPopUpBox.display();
 			} else if (key.getCode() == KeyCode.H) {
-				// help window pop up
+				// TODO: help window pop up
+				System.out.println("'h' key pressed");
 			}
 		});
 
 		return output;
+	}
+
+	private Scene createOptionsMenu(Stage stage) {
+
+		VBox layout = new VBox();
+		layout.setAlignment(Pos.CENTER);
+		layout.setSpacing(5);
+
+		layout.getChildren().addAll(fullScreenButton, returnButton);
+
+		fullScreenButton.setOnAction(e -> {
+			window.setFullScreen(!window.isFullScreen());
+		});
+
+		returnButton.setOnAction(e -> {
+			stage.setScene(menuScene);
+		});
+
+		return new Scene(layout, MAIN_SCENE_WIN_WIDTH, WIN_HEIGHT);
 	}
 
 	private void escapeFunction(Stage stage, Scene scene, int[] input, Canvas canvas, GraphicsContext gc, int width) {
@@ -212,11 +285,23 @@ public class MainClass extends Application {
 	}
 
 	private void drawRedLine(int i, int[] input, GraphicsContext gc) {
-		gc.setStroke(Color.RED);
-		gc.strokeLine(2 * i, WIN_WIDTH, 2 * i, WIN_WIDTH - input[i]);
-		gc.strokeLine(2 * i + 1, WIN_WIDTH, 2 * i + 1, WIN_WIDTH - input[i]);
+		if (i >= 0 && i < input.length) {
 
+			gc.setStroke(Color.RED);
+			gc.strokeLine(2 * i, WIN_WIDTH, 2 * i, WIN_WIDTH - input[i]);
+			gc.strokeLine(2 * i + 1, WIN_WIDTH, 2 * i + 1, WIN_WIDTH - input[i]);
+		}
 	}
+
+	private void drawGreenLine(int i, int[] input, GraphicsContext gc) {
+		if (i >= 0 && i < input.length) {
+
+			gc.setStroke(Color.GREEN);
+			gc.strokeLine(2 * i, WIN_WIDTH, 2 * i, WIN_WIDTH - input[i]);
+			gc.strokeLine(2 * i + 1, WIN_WIDTH, 2 * i + 1, WIN_WIDTH - input[i]);
+		}
+	}
+	
 
 	private void clearCanvas(Canvas canvas, GraphicsContext gc) {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -228,6 +313,15 @@ public class MainClass extends Application {
 		// draw updated array
 		drawArray(input, gc);
 		drawRedLine(num, input, gc);
+	}
+	
+	private void refreshCanvas(int num, int num2, int[] input, Canvas canvas, GraphicsContext gc) {
+		// clear screen
+		clearCanvas(canvas, gc);
+		// draw updated array
+		drawArray(input, gc);
+		drawRedLine(num, input, gc);
+		drawGreenLine(num2, input, gc);
 	}
 
 	// SORTS
@@ -266,32 +360,83 @@ public class MainClass extends Application {
 		i = 1;
 
 		// KeyFrame
-		KeyFrame frame = new KeyFrame(Duration.millis(ANIMATION_DURATION), new EventHandler<ActionEvent>() {
+		KeyFrame frame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 
 				// TODO:
 				// insertion sort
-				int key = input[i];
-				j = i - 1;
+				if (i < input.length) {
 
-				/*
-				 * Move elements of input[0...i-1], that are greater than key, to one position
-				 * ahead of their current position
-				 */
-				while (j >= 0 && input[j] > key) {
-					input[j + 1] = input[j];
-					j = j - 1;
+					int key = input[i];
+					j = i - 1;
+
+					/*
+					 * Move elements of input[0...i-1], that are greater than key, to one position
+					 * ahead of their current position
+					 */
+
+					// TODO: make this iterate once every frame so it animates properly
+					while (j >= 0 && input[j] > key) {
+						input[j + 1] = input[j];
+						j = j - 1;
+					}
+
+					input[j + 1] = key;
+
+					// iterate i
+					i++;
+
+					// refresh canvas
+					refreshCanvas(j, input, canvas, gc);
+
 				}
 
-				input[j + 1] = key;
+			}
+		});
 
-				// iterate i
-				i++;
+		startTimeline(frame);
+	}
 
-				// refresh canvas
-				refreshCanvas(j, input, canvas, gc);
+	private void runSelectionSortAnimation(int[] input, Canvas canvas, GraphicsContext gc) {
+
+		minIndex = i;
+		
+		// KeyFrame
+		KeyFrame frame = new KeyFrame(Duration.millis(ANIMATION_DURATION), new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+
+				// TODO:
+				// selection sort
+				if (i < input.length) {
+
+					// find minimum value in unsorted array
+					// FIXME: make this happen once per frame
+					if (input[j] < input[minIndex]) {
+						minIndex = j;
+					}
+
+					// iterate j
+					j = j + 1;
+
+					if (j >= input.length) {
+						// swap the found minimum element with the first element
+						int temp = input[minIndex];
+						input[minIndex] = input[i];
+						input[i] = temp;
+						
+						// reset min and j, iterate i
+						minIndex = i;
+						j = i + 1;
+						i++;
+					}
+
+					// refresh canvas
+					refreshCanvas(j, minIndex, input, canvas, gc);
+				}
 			}
 		});
 
@@ -307,6 +452,7 @@ public class MainClass extends Application {
 
 				// TODO:
 				// heap sort
+				HeapSort.runHeapSort(input);
 
 				// refresh canvas
 				refreshCanvas(j, input, canvas, gc);
@@ -362,7 +508,7 @@ public class MainClass extends Application {
 	}
 
 	private void reset(Canvas canvas, GraphicsContext gc, int[] input, int width) {
-//		t.stop();
+		t.stop(); // FIXME: timeline won't restart on
 		t = null;
 		clearCanvas(canvas, gc);
 		randomizeArray(input, width);

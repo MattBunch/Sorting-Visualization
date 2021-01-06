@@ -1,11 +1,19 @@
 # Sorting Visualizer Project
 
-This programs visualizes serveral sorting algorithms. As of writing, only Bubble Sort has been implemented
+This programs visualizes serveral sorting algorithms. As of writing, only Bubble Sort, Insertion sort has been implemented
 
 ## Built With:
 
 - Java, JavaFX
 - Eclipse
+
+### Build and Run
+
+```
+git clone https://github.com/MattBunch/Sorting-Visualization.git
+cd Sorting-Visualization
+gradle run
+```
 
 ## Devlog:
 
