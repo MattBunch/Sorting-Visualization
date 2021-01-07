@@ -1,6 +1,6 @@
 # Sorting Visualizer Project
 
-This programs visualizes serveral sorting algorithms. As of writing, only Bubble Sort, Insertion sort has been implemented
+This programs visualizes several sorting algorithms on a canvas.
 
 ## Built With:
 
@@ -21,9 +21,18 @@ gradle run
 
 Core components built, bubblesort implemented.
 
-### 5/01/2021
+### 6/01/2021
 
-Added key functionality.
+Added some other sorts with varying levels of functionality. 
+Need to make parts of some sorts like Insertion Sort and Selection Sort, need to convert Heapsort to main class. 
+
+### 7/01/2011
+
+Need to fix the timeline from not starting again when starting the program over again.
+When t.stop() is called, the program will show a blank screen on the main scene instead of the graph animation
+If t.stop() is commented out, the program will double in speed.
+Insertion Sort and Selection Sort partially implemented but there is still one for loop or while loop that is not animated in either.
+Heap Sort needs to be put into main class.
 
 # Extensions for future versions:
 

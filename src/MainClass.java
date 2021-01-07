@@ -152,12 +152,12 @@ public class MainClass extends Application {
 			stage.setScene(mainScene);
 			runSelectionSortAnimation(mainArray, canvas, gc);
 		});
-		
+
 		quickSortButton.setOnAction(e -> {
 //			stage.setScene(mainScene);
 //			runQuickSortAnimation(mainArray, canvas, gc);
 		});
-		
+
 		heapSortButton.setOnAction(e -> {
 			stage.setScene(mainScene);
 			runHeapSortAnimation(mainArray, canvas, gc);
@@ -301,7 +301,6 @@ public class MainClass extends Application {
 			gc.strokeLine(2 * i + 1, WIN_WIDTH, 2 * i + 1, WIN_WIDTH - input[i]);
 		}
 	}
-	
 
 	private void clearCanvas(Canvas canvas, GraphicsContext gc) {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -314,7 +313,7 @@ public class MainClass extends Application {
 		drawArray(input, gc);
 		drawRedLine(num, input, gc);
 	}
-	
+
 	private void refreshCanvas(int num, int num2, int[] input, Canvas canvas, GraphicsContext gc) {
 		// clear screen
 		clearCanvas(canvas, gc);
@@ -353,6 +352,7 @@ public class MainClass extends Application {
 		});
 
 		startTimeline(frame);
+
 	}
 
 	private void runInsertionSortAnimation(int[] input, Canvas canvas, GraphicsContext gc) {
@@ -402,37 +402,33 @@ public class MainClass extends Application {
 	private void runSelectionSortAnimation(int[] input, Canvas canvas, GraphicsContext gc) {
 
 		minIndex = i;
-		
+
 		// KeyFrame
 		KeyFrame frame = new KeyFrame(Duration.millis(ANIMATION_DURATION), new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-
 				// TODO:
 				// selection sort
 				if (i < input.length) {
 
 					// find minimum value in unsorted array
+
+					minIndex = i;
+					
 					// FIXME: make this happen once per frame
-					if (input[j] < input[minIndex]) {
-						minIndex = j;
+					for (int k = i + 1; k < input.length; k++) {
+						if (input[k] < input[minIndex]) {
+							minIndex = k;
+						}
 					}
 
-					// iterate j
-					j = j + 1;
+					int temp = input[minIndex];
+					input[minIndex] = input[i];
+					input[i] = temp;
 
-					if (j >= input.length) {
-						// swap the found minimum element with the first element
-						int temp = input[minIndex];
-						input[minIndex] = input[i];
-						input[i] = temp;
-						
-						// reset min and j, iterate i
-						minIndex = i;
-						j = i + 1;
-						i++;
-					}
+					// iterate i
+					i++;
 
 					// refresh canvas
 					refreshCanvas(j, minIndex, input, canvas, gc);
@@ -508,7 +504,8 @@ public class MainClass extends Application {
 	}
 
 	private void reset(Canvas canvas, GraphicsContext gc, int[] input, int width) {
-		t.stop(); // FIXME: timeline won't restart on
+		t.stop(); // FIXME: timeline won't restart on repeated sorts
+		pauseAnimation();
 		t = null;
 		clearCanvas(canvas, gc);
 		randomizeArray(input, width);
